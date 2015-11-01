@@ -115,10 +115,12 @@ Function Get-Telnet
     $Result | Out-File $OutputPath
 }
 
-Get-Telnet -RemoteHost "192.168.0.1" -Commands "admin","password","sh","xdslcmd info --stats" -OutputPath "C:\out.txt" -WaitTime 1500
+Get-Telnet -RemoteHost "192.168.104.3" -Commands "admin","admin","sh","xdslcmd info --stats" -OutputPath "C:\out.txt" -WaitTime 1500
 $dnspeed = (Select-String -Path c:\out.txt -pattern "Bearer:	0, Upstream rate =").Line.Split("=,")[4]
 $upspeed = (Select-String -Path c:\out.txt -pattern "Bearer:	0, Upstream rate =").Line.Split("=,")[2]
-$uptime = (Select-String -Path c:\out.txt -pattern "Since Link time").Line.Split("=")[1]
-$tweet = "@chall32 D/L=$dnspeed U/L=$upspeed Uptime=$uptime"
+$uptimesecs = ((Select-String -Path c:\out.txt -pattern "AS:		").Line.Split(":")[3]).trim()
+$tspan =  [timespan]::fromseconds($uptimesecs)
+$uptime = "{0:dd} days, {0:hh} hours, {0:mm} mins, {0:ss} secs" -f $tspan
+$tweet = "@chall32 D/L=$dnspeed U/L=$upspeed Uptime= $uptime"
 Invoke-Command {C:\Python34\Scripts\twitter.exe set $tweet}
 Remove-Item C:\out.txt

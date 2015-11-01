@@ -1,3 +1,8 @@
+Release v0.2 - 01 Nov 2015
+--------------------------
+* [Fix] Use 'AS' value to calculate uptime http://forum.kitz.co.uk/index.php?topic=15257.0
+
+
 Release v0.1 - 13 Apr 2015
 --------------------------
 * Initial Release
